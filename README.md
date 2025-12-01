@@ -9,6 +9,8 @@ dotfiles/
 ├── common/              # Dotfiles compartidos entre los 3 SO
 │   ├── nvim/            # Configuración de Neovim (~/.config/nvim)
 │   ├── starship.toml    # Configuración de Starship (~/.config/starship.toml)
+│   ├── wezterm/         # Configuración de WezTerm (~/.config/wezterm/)
+│   ├── .gitconfig       # Configuración de Git (~/.gitconfig)
 │   └── ... 
 ├── windows/             # Específicos de Windows
 │   ├── PowerShell/
@@ -20,12 +22,41 @@ dotfiles/
 │   └── scripts/
 │       └── install.sh   # Script de despliegue para Linux
 ├── macos/               # Específicos de macOS
-│   ├── .zshrc
+│   ├── .zshrc           # Shell configuration (~/.zshrc)
 │   └── scripts/
 │       └── install.sh   # Script de despliegue para macOS
 ├── README. md
 └── .gitignore
 ```
+
+## Mapeo de archivos
+
+### macOS
+| Archivo en el repo | Ubicación en el sistema |
+|-------------------|------------------------|
+| `common/wezterm/wezterm.lua` | `~/.config/wezterm/wezterm.lua` |
+| `common/starship.toml` | `~/.config/starship.toml` |
+| `common/.gitconfig` | `~/.gitconfig` |
+| `common/nvim/` | `~/.config/nvim/` |
+| `macos/.zshrc` | `~/.zshrc` |
+
+### Linux (Debian/Ubuntu)
+| Archivo en el repo | Ubicación en el sistema |
+|-------------------|------------------------|
+| `common/wezterm/wezterm.lua` | `~/.config/wezterm/wezterm.lua` |
+| `common/starship.toml` | `~/.config/starship.toml` |
+| `common/.gitconfig` | `~/.gitconfig` |
+| `common/nvim/` | `~/.config/nvim/` |
+| `linux/.bashrc` | `~/.bashrc` |
+
+### Windows
+| Archivo en el repo | Ubicación en el sistema |
+|-------------------|------------------------|
+| `common/wezterm/wezterm.lua` | `%USERPROFILE%\.config\wezterm\wezterm.lua` |
+| `common/starship.toml` | `%USERPROFILE%\.config\starship.toml` |
+| `common/.gitconfig` | `%USERPROFILE%\.gitconfig` |
+| `common/nvim/` | `%LOCALAPPDATA%\nvim\` |
+| `windows/PowerShell/Microsoft.PowerShell_profile.ps1` | `$PROFILE` |
 
 ## Uso
 
@@ -73,14 +104,15 @@ $env:DRY_RUN = 0
 ```
 
 ### 4.  Guardar cambios al repositorio
-Los scripts despliegan archivos **desde** el repo **hacia** tu sistema.  Para guardar cambios que hagas localmente:
+Los scripts **copian** archivos desde el repo hacia tu sistema. Para actualizar el repositorio con nuevos cambios:
 
-1. Edita los archivos directamente en el repo (`~/dotfiles/common/nvim/... `, etc.)
-2. Revisa los cambios:
+1. Edita los archivos directamente en el repo (`~/dotfiles-anywhere/common/wezterm/`, etc.)
+2. Ejecuta el script de instalación para aplicar los cambios a tu sistema
+3. Revisa los cambios en git:
    ```bash
    git diff
    ```
-3. Añade y commitea:
+4. Añade y commitea:
    ```bash
    git add .
    git commit -m "Descripción de cambios"
@@ -89,15 +121,27 @@ Los scripts despliegan archivos **desde** el repo **hacia** tu sistema.  Para gu
 
 ## Notas importantes
 
+### Funcionamiento de los scripts
+- Los scripts **copian archivos** desde el repositorio hacia sus ubicaciones de destino en el sistema
+- **NO usan symlinks** - se crean copias independientes de los archivos
+- Si un directorio de destino no existe, se crea automáticamente
+- Los archivos existentes se respaldan con timestamp antes de ser sobrescritos (`.backup.YYYYMMDD_HHMMSS`)
+
 ### Seguridad
-- Los scripts **no sobrescriben** archivos existentes sin confirmación explícita
 - Modo DRY RUN activado por defecto para revisar cambios antes de aplicarlos
-- Se recomienda hacer backup manual de configuraciones importantes antes del primer despliegue
+- Se crean backups automáticos de archivos existentes con timestamp
+- Los directorios se crean solo si no existen
 
 ### Dotfiles compartidos (common/)
-Los archivos en `common/` se despliegan a ubicaciones estándar en los 3 SO:
+Los archivos en `common/` se copian a ubicaciones estándar en los 3 SO:
 - **macOS/Linux:** `~/.config/`
 - **Windows:** `$env:USERPROFILE\.config\` o `$env:LOCALAPPDATA\`
+
+### Workflow recomendado
+1. **Edita** en el repositorio (`~/dotfiles-anywhere/common/...`)
+2. **Prueba** con DRY RUN: `./install.sh`
+3. **Aplica** los cambios: `DRY_RUN=0 ./install.sh`
+4. **Commitea** al repositorio cuando estés satisfecho
 
 ### Overrides específicos por SO
 Si un archivo existe tanto en `common/` como en la carpeta del SO (p. ej., `windows/`), el específico del SO tiene prioridad y sobrescribe el común durante el despliegue.
