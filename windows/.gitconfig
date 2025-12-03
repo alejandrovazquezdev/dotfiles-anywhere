@@ -1,0 +1,10 @@
+[user]
+        name = Alejandro Isaac Vazquez Lopez
+        email = alejandroisaacvazquezlopez@gmail.com
+[core]
+        editor = code --wait
+        autocrlf = true
+[init]
+        defaultBranch = main
+[url "git@github.com:"]
+        insteadOf = https://github.com/

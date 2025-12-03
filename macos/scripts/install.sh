@@ -89,6 +89,25 @@ else
     echo -e "${GREEN}✓${NC} Copiado: ~/.gitconfig"
 fi
 
+# Neovim
+echo -e "${BLUE}ℹ${NC} Instalando Neovim..."
+
+if [ ! -d "$HOME/.config" ]; then
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo -e "${BLUE}ℹ${NC} [DRY RUN] Crearía: ~/.config/"
+    else
+        mkdir -p "$HOME/.config"
+        echo -e "${GREEN}✓${NC} Directorio creado: ~/.config/"
+    fi
+fi
+
+if [ "$DRY_RUN" -eq 1 ]; then
+    echo -e "${BLUE}ℹ${NC} [DRY RUN] Copiaría: common/nvim/ -> ~/.config/nvim/"
+else
+    cp -r "$DOTFILES_DIR/common/nvim" "$HOME/.config/"
+    echo -e "${GREEN}✓${NC} Copiado: ~/.config/nvim/"
+fi
+
 # Resumen
 echo ""
 echo "═══════════════════════════════════════════════════════"

@@ -6,7 +6,7 @@ Objetivo: repo único para Windows, Debian/Linux y macOS, con dotfiles compartid
 
 ```
 dotfiles/
-├── common/              # Dotfiles compartidos entre los 3 SO
+├── common/              # Dotfiles compartidos entre 2 o más SO
 │   ├── nvim/            # Configuración de Neovim (~/.config/nvim)
 │   ├── starship.toml    # Configuración de Starship (~/.config/starship.toml)
 │   ├── wezterm/         # Configuración de WezTerm (~/.config/wezterm/)
@@ -37,7 +37,7 @@ dotfiles/
 | `common/wezterm/wezterm.lua` | `~/.config/wezterm/wezterm.lua` |
 | `common/starship.toml` | `~/.config/starship.toml` |
 | `common/.gitconfig` | `~/.gitconfig` |
-| `common/nvim/` | `~/.config/nvim/` |
+| `common/nvim/` | `~/.config/nvim/` (LazyVim) |
 | `macos/.zshrc` | `~/.zshrc` |
 
 ### Linux (Debian/Ubuntu)
@@ -46,7 +46,7 @@ dotfiles/
 | `common/wezterm/wezterm.lua` | `~/.config/wezterm/wezterm.lua` |
 | `common/starship.toml` | `~/.config/starship.toml` |
 | `common/.gitconfig` | `~/.gitconfig` |
-| `common/nvim/` | `~/.config/nvim/` |
+| `common/nvim/` | `~/.config/nvim/` (LazyVim) |
 | `linux/.bashrc` | `~/.bashrc` |
 
 ### Windows
@@ -62,8 +62,8 @@ dotfiles/
 
 ### 1. Clonar el repositorio
 ```bash
-git clone git@github.com:tu-usuario/dotfiles.git ~/dotfiles
-cd ~/dotfiles
+git clone git@github.com:alejandrovazquezdev/dotfiles-anywhere.git ~/dotfiles-anywhere
+cd ~/dotfiles-anywhere
 ```
 
 ### 2. Desplegar dotfiles en tu sistema
@@ -146,11 +146,6 @@ Los archivos en `common/` se copian a ubicaciones estándar en los 3 SO:
 ### Overrides específicos por SO
 Si un archivo existe tanto en `common/` como en la carpeta del SO (p. ej., `windows/`), el específico del SO tiene prioridad y sobrescribe el común durante el despliegue.
 
-### Symlinks vs. Copias
-- Por defecto, los scripts intentan crear **enlaces simbólicos** (symlinks)
-- Si fallan (p. ej., en Windows sin Modo Desarrollador o permisos), hacen **copia** como fallback
-- Ventaja de symlinks: los cambios en el repo se reflejan inmediatamente en el sistema
-
 ### Gestión de secretos
 **NO incluyas** credenciales, tokens o secretos en este repositorio. Usa:
 - Variables de entorno locales (`. env. local`, no trackeadas)
@@ -187,17 +182,19 @@ Si un archivo existe tanto en `common/` como en la carpeta del SO (p. ej., `wind
 4. **Documentar dependencias:** anota qué herramientas requieren instalación previa (mise, starship, etc.)
 
 ## Reversión
-Para deshacer el despliegue, elimina los symlinks o archivos copiados manualmente:
+Para deshacer el despliegue, elimina los archivos copiados manualmente:
 
 **POSIX:**
 ```bash
-rm ~/. config/nvim  # Si es symlink
+rm -r ~/.config/nvim
 rm ~/.config/starship.toml
+rm ~/.zshrc
 ```
 
 **Windows:**
 ```powershell
-Remove-Item $env:USERPROFILE\.config\nvim -Force
+Remove-Item $env:USERPROFILE\.config\nvim -Recurse -Force
+Remove-Item $env:USERPROFILE\.config\starship.toml -Force
 ```
 
 ---
