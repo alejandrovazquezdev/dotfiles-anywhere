@@ -1,10 +1,64 @@
 [user]
-        name = Alejandro Isaac Vazquez Lopez
-        email = alejandroisaacvazquezlopez@gmail.com
+	name = Alejandro Isaac Vazquez Lopez
+	email = alejandroisaacvazquezlopez@gmail.com
+
 [core]
-        editor = code --wait
-        autocrlf = true
+	editor = code --wait
+	autocrlf = true
+
 [init]
-        defaultBranch = main
+	defaultBranch = main
+
 [url "git@github.com:"]
-        insteadOf = https://github.com/
+	insteadOf = https://github.com/
+
+[alias]
+	# Status y info
+	s = status -sb
+	st = status
+	
+	# Commits
+	c = commit
+	cm = commit -m
+	ca = commit --amend
+	can = commit --amend --no-edit
+	
+	# Add
+	a = add
+	aa = add --all
+	ap = add --patch
+	
+	# Checkout y branches
+	co = checkout
+	cob = checkout -b
+	br = branch
+	bra = branch -a
+	
+	# Log bonito
+	l = log --oneline --graph --decorate
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	last = log -1 HEAD --stat
+	
+	# Diff
+	d = diff
+	ds = diff --staged
+	
+	# Push/Pull
+	p = push
+	pf = push --force-with-lease
+	pl = pull
+	
+	# Reset
+	unstage = reset HEAD --
+	undo = reset --soft HEAD^
+	
+	# Stash
+	ss = stash save
+	sp = stash pop
+	sl = stash list
+	
+	# Remotes
+	rv = remote -v
+	
+	# Limpieza
+	cleanup = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
